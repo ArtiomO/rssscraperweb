@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom'
+import { useAuth } from './Auth'
 
 export default function Navbartop() {
-
-  const redirectUri = encodeURIComponent("http://localhost:3000/oauthcallback")
-  const clientId = encodeURIComponent("test-client-id")
+  const redirectUri = encodeURIComponent(process.env.REACT_APP_OAUTH_CALLBACK_URL)
+  const clientId = encodeURIComponent('test-client-id')
+  const auth = useAuth()
 
   return (
     <div className='navbar'>
@@ -11,12 +12,13 @@ export default function Navbartop() {
         <li>
           <Link to={'/'}> Home </Link>
         </li>
-        <li>
-          <Link to={'/account'}> Account </Link>
-        </li>
-        <li>
-          <Link to={"http://localhost:8080/login?client_id=" + clientId + "&redirect_uri=" + redirectUri}> Login </Link>
-        </li>
+        {auth ? (
+          <li>Logged in.</li>
+        ) : (
+          <li>
+            <Link to={process.env.REACT_APP_OAUTH_API_URL + 'v1/login?client_id=' + clientId + '&redirect_uri=' + redirectUri}>Login</Link>
+          </li>
+        )}
       </ul>
     </div>
   )
