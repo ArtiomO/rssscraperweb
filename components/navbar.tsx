@@ -5,7 +5,7 @@ import React from 'react'
 const Navbar: React.FunctionComponent = () => {
 
     const clientId = encodeURIComponent('test-client-id')
-    const apiUri = encodeURIComponent(process.env.REACT_APP_OAUTH_API_URL)
+    const apiUri = process.env.REACT_APP_OAUTH_API_URL
     const callbackUri = encodeURIComponent(process.env.REACT_APP_OAUTH_CALLBACK_URL)
 
     return (
