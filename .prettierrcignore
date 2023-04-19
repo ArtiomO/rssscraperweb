@@ -1,0 +1,8 @@
+.next
+.vscode
+styles
+global.d.ts
+next-env.d.ts
+next.config.js
+postcss.config.js
+tailwind.config.js
