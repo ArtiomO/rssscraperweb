@@ -3,16 +3,15 @@ import React from 'react';
 import { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import { setCookie } from '@/helpers/cookies';
+import { cookieOptions } from '@/helpers/cookies';
 
 interface Props {
   state?: string;
 }
 
-const states = new Set();
-
 const clientId = encodeURIComponent('test-client-id');
 const apiUri = process.env.NEXT_PUBLIC_OAUTH_API_URL;
-console.log(process.env.NEXT_PUBLIC_OAUTH_CALLBACK_URL);
 const callbackUri = encodeURIComponent(
   process.env.NEXT_PUBLIC_OAUTH_CALLBACK_URL
 );
@@ -28,7 +27,7 @@ export default function Login({ state }: Props) {
     callbackUri +
     '&state=' +
     state;
-  
+
   useEffect(() => {
     {
       router.push(redirectUri);
@@ -40,7 +39,7 @@ export default function Login({ state }: Props) {
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const state = RandString(8);
-  states.add(state);
-
+  const { req, res } = context;
+  setCookie(res, 'oauthstate', state, { ...cookieOptions });
   return { props: { state } };
 }
