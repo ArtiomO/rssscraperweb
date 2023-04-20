@@ -6,16 +6,19 @@ import { useEffect } from 'react';
 import { redisClient } from '@/db/redis';
 
 interface Props {
-  state?: string;
+  state: string;
+  apiUri: string;
+  clientId: string;
+  callbackUri: string;
 }
 
-const clientId = encodeURIComponent(process.env.NEXT_PUBLIC_OAUTH_CLIENT_ID);
-const apiUri = process.env.NEXT_PUBLIC_OAUTH_API_URL;
+const clientId = encodeURIComponent(process.env.OAUTH_CLIENT_ID);
+const apiUri = process.env.OAUTH_API_URL;
 const callbackUri = encodeURIComponent(
-  process.env.NEXT_PUBLIC_OAUTH_CALLBACK_URL
+  process.env.OAUTH_CALLBACK_URL
 );
 
-export default function Login({ state }: Props) {
+export default function Login({ state, apiUri, clientId, callbackUri }: Props) {
   const router = useRouter();
 
   const redirectUri =
@@ -38,7 +41,7 @@ export default function Login({ state }: Props) {
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const state = RandString(8);
-  await redisClient.set(`state_${state}`, "")
-  await redisClient.expire(`state_${state}`, 60);
-  return { props: { state } };
+  await redisClient.set(`scraper_web_state_${state}`, '');
+  await redisClient.expire(`scraper_web_state_${state}`, 5);
+  return { props: { state, apiUri, clientId, callbackUri } };
 }
