@@ -3,14 +3,13 @@ import React from 'react';
 import { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { setCookie } from '@/helpers/cookies';
-import { cookieOptions } from '@/helpers/cookies';
+import { redisClient } from '@/db/redis';
 
 interface Props {
   state?: string;
 }
 
-const clientId = encodeURIComponent('test-client-id');
+const clientId = encodeURIComponent(process.env.NEXT_PUBLIC_OAUTH_CLIENT_ID);
 const apiUri = process.env.NEXT_PUBLIC_OAUTH_API_URL;
 const callbackUri = encodeURIComponent(
   process.env.NEXT_PUBLIC_OAUTH_CALLBACK_URL
@@ -39,7 +38,7 @@ export default function Login({ state }: Props) {
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const state = RandString(8);
-  const { req, res } = context;
-  setCookie(res, 'oauthstate', state, { ...cookieOptions });
+  await redisClient.set(`state_${state}`, "")
+  await redisClient.expire(`state_${state}`, 60);
   return { props: { state } };
 }

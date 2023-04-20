@@ -1,6 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { setCookie } from '@/helpers/cookies';
-import { cookieOptions } from '@/helpers/cookies';
+import encodeClientCredentials from '@/helpers/encode';
+import { postData } from '@/clients/base';
+import { redisClient } from '@/db/redis';
+
 
 type Data = {
   err: string;
@@ -13,18 +15,46 @@ interface ExtendedNextApiRequest extends NextApiRequest {
   };
 }
 
-export default function handler(
+export default async function handler(
   req: ExtendedNextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  const { oauthstate: cookiestate } = req.cookies;
+  const { code } = req.query;
 
-  if (cookiestate !== req.query.state) {
+  const localState = redisClient.get(`state_${req.query.state}`);
+
+  if (!localState) {
     res.status(400).json({ err: 'Bad request.' });
     return;
   }
 
-  setCookie(res, 'oauthstate', '0', { ...cookieOptions, path: '/', maxAge: 1 });
+  redisClient.del(`state_${req.query.state}`);
+
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization:
+      'Basic ' +
+      encodeClientCredentials(
+        process.env.NEXT_PUBLIC_OAUTH_CLIENT_ID,
+        process.env.NEXT_PUBLIC_OAUTH_CLIENT_SECRET
+      )
+  };
+
+  const data = {
+    grant_type: 'authorization_code',
+    code: code,
+    redirect_uri: process.env.NEXT_PUBLIC_OAUTH_CALLBACK_URL
+  };
+
+  console.log(data);
+
+  const response = await postData(
+    process.env.NEXT_PUBLIC_OAUTH_API_URL + 'v1/token',
+    data,
+    headers
+  ).then((data) => {
+    console.log(data);
+  });
 
   res.status(200).json({ err: 'ok' });
 }
