@@ -4,6 +4,10 @@ import { postData } from '@/clients/base';
 import { redisClient } from '@/db/redis';
 
 type Data = {
+  token: string;
+};
+
+type Error = {
   err: string;
 };
 
@@ -17,7 +21,7 @@ interface ExtendedNextApiRequest extends NextApiRequest {
 
 export default async function handler(
   req: ExtendedNextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse<Data | Error>
 ) {
   const { code } = req.query;
 
@@ -53,15 +57,11 @@ export default async function handler(
     code_verifier: codeVerifier
   };
 
-  console.log(data);
-
   const response = await postData(
     process.env.OAUTH_API_URL + 'v1/token',
     data,
     headers
-  ).then((data) => {
-    console.log(data);
+  ).then((data: Data) => {
+    res.status(200).json(data);
   });
-
-  res.status(200).json({ err: 'ok' });
 }

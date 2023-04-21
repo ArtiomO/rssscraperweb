@@ -26,17 +26,15 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const redirectUri =
     apiUri +
     'v1/login?client_id=' +
-    clientId +
+    encodeURIComponent(clientId) +
     '&redirect_uri=' +
-    callbackUri +
+    encodeURIComponent(callbackUri) +
     '&state=' +
-    state +
+    encodeURIComponent(state) +
     '&code_challenge=' +
-    codeChallenge +
+    encodeURIComponent(codeChallenge) +
     '&code_challenge_method=' +
     'sha256';
-
-  console.log(codeChallenge);
 
   return {
     redirect: {

@@ -1,5 +1,5 @@
 import { createHash } from 'crypto';
 
 export default function hash(string: string) {
-  return createHash('sha256').update(string).digest('base64');
+  return createHash('sha256').update(string).digest('hex');
 }
