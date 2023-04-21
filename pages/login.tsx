@@ -14,9 +14,7 @@ interface Props {
 
 const clientId = encodeURIComponent(process.env.OAUTH_CLIENT_ID);
 const apiUri = process.env.OAUTH_API_URL;
-const callbackUri = encodeURIComponent(
-  process.env.OAUTH_CALLBACK_URL
-);
+const callbackUri = encodeURIComponent(process.env.OAUTH_CALLBACK_URL);
 
 export default function Login({ state, apiUri, clientId, callbackUri }: Props) {
   const router = useRouter();
@@ -41,6 +39,7 @@ export default function Login({ state, apiUri, clientId, callbackUri }: Props) {
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const state = RandString(8);
+
   await redisClient.set(`scraper_web_state_${state}`, '');
   await redisClient.expire(`scraper_web_state_${state}`, 5);
   return { props: { state, apiUri, clientId, callbackUri } };
