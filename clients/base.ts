@@ -1,4 +1,4 @@
-export async function postData(url = '', data = {}, headers = {}) {
+export async function postData(url = '', data = '', headers = {}) {
   // Default options are marked with *
   const response = await fetch(url, {
     method: 'POST',
@@ -8,7 +8,7 @@ export async function postData(url = '', data = {}, headers = {}) {
     headers: headers,
     redirect: 'follow',
     referrerPolicy: 'no-referrer',
-    body: JSON.stringify(data) // body data type must match "Content-Type" header
+    body: data // body data type must match "Content-Type" header
   });
   return response.json(); // parses JSON response into native JavaScript objects
 }

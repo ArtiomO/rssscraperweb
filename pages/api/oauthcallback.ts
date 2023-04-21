@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import encodeClientCredentials from '@/helpers/encode';
 import { postData } from '@/clients/base';
 import { redisClient } from '@/db/redis';
+import { encodeForm } from '@/helpers/encode';
 
 type Data = {
   token: string;
@@ -29,8 +30,7 @@ export default async function handler(
   const verifierKey = `scraper_web_code_verifier_${req.query.state}`;
 
   const localState = await redisClient.get(stateKey);
-  const codeVerifier = await redisClient.get(verifierKey);
-  console.log(localState);
+  const codeVerifier = (await redisClient.get(verifierKey)) || '';
 
   if (!localState) {
     res.status(400).json({ err: 'Bad request.' });
@@ -41,7 +41,7 @@ export default async function handler(
   await redisClient.del(`scraper_web_code_verifier_${req.query.state}`);
 
   const headers = {
-    'Content-Type': 'application/json',
+    'Content-Type': 'application/x-www-form-urlencoded',
     Authorization:
       'Basic ' +
       encodeClientCredentials(
@@ -57,9 +57,11 @@ export default async function handler(
     code_verifier: codeVerifier
   };
 
+  const encodedForm = encodeForm(data);
+
   const response = await postData(
     process.env.OAUTH_API_URL + 'v1/token',
-    data,
+    encodedForm,
     headers
   ).then((data: Data) => {
     res.status(200).json(data);
