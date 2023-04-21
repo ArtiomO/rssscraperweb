@@ -11,6 +11,7 @@ interface ExtendedNextApiRequest extends NextApiRequest {
   query: {
     state: string;
     code: string;
+    code_verifier: string;
   };
 }
 
@@ -20,14 +21,20 @@ export default async function handler(
 ) {
   const { code } = req.query;
 
-  const localState = redisClient.get(`scraper_web_state_${req.query.state}`);
+  const stateKey = `scraper_web_state_${req.query.state}`;
+  const verifierKey = `scraper_web_code_verifier_${req.query.state}`;
+
+  const localState = await redisClient.get(stateKey);
+  const codeVerifier = await redisClient.get(verifierKey);
+  console.log(localState);
 
   if (!localState) {
     res.status(400).json({ err: 'Bad request.' });
     return;
   }
 
-  redisClient.del(`scraper_web_state_${req.query.state}`);
+  await redisClient.del(`scraper_web_state_${req.query.state}`);
+  await redisClient.del(`scraper_web_code_verifier_${req.query.state}`);
 
   const headers = {
     'Content-Type': 'application/json',
@@ -42,7 +49,8 @@ export default async function handler(
   const data = {
     grant_type: 'authorization_code',
     code: code,
-    redirect_uri: process.env.OAUTH_CALLBACK_URL
+    redirect_uri: process.env.OAUTH_CALLBACK_URL,
+    code_verifier: codeVerifier
   };
 
   console.log(data);
