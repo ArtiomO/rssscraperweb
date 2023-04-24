@@ -39,5 +39,5 @@ export async function sessionFromRequest(
   decipheredSession += decipher.final('base64');
 
   if (sessionParsed.sessionId != decipheredSession) return undefined;
-  else return sessionParsed;
+  return sessionParsed;
 }

@@ -4,7 +4,7 @@ import { redisClient } from '@/db/redis';
 import cookie from 'cookie';
 
 const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY;
-const SESSION_MAX_AGE = 60 * 60 * 24 * 7;
+const SESSION_MAX_AGE = 3600;
 
 export default async function setCookieHeader(
   res: NextApiResponse,

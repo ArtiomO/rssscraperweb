@@ -1,6 +1,6 @@
-import { randomBytes, createCipheriv } from 'crypto';
+import { randomBytes } from 'crypto';
 
 export default function randString(length: number): string {
-  const result = randomBytes(length).toString('base64');
+  const result = randomBytes(length).toString('hex');
   return result;
 }
