@@ -12,7 +12,11 @@ export default async function setCookieHeader(
 ) {
   const sessionId = randomBytes(32).toString('base64');
   const iv = randomBytes(16);
-  const cipher = createCipheriv('aes-256-cbc', Buffer.from(ENCRYPTION_KEY, 'hex'), iv);
+  const cipher = createCipheriv(
+    'aes-256-cbc',
+    Buffer.from(ENCRYPTION_KEY, 'hex'),
+    iv
+  );
 
   const SessionValue = {
     token: token,

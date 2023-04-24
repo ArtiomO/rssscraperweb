@@ -70,5 +70,5 @@ export default async function handler(
     headers
   );
   await setCookieHeader(res, response.token);
-  res.redirect(302, "/account");
+  res.redirect(302, '/account');
 }

@@ -31,7 +31,11 @@ export async function sessionFromRequest(
     iv
   );
 
-  let decipheredSession = decipher.update(encryptedSessionId, 'base64', 'base64');
+  let decipheredSession = decipher.update(
+    encryptedSessionId,
+    'base64',
+    'base64'
+  );
   decipheredSession += decipher.final('base64');
 
   if (sessionParsed.sessionId != decipheredSession) return undefined;
