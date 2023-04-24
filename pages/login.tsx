@@ -1,4 +1,4 @@
-import RandString from '@/helpers/random';
+import randString from '@/helpers/random';
 import React from 'react';
 import { GetServerSidePropsContext } from 'next';
 import { redisClient } from '@/db/redis';
@@ -13,15 +13,15 @@ export default function Login() {
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const state = RandString(8);
+  const state = randString(8);
 
-  const codeVerifier = RandString(80);
+  const codeVerifier = randString(80);
   const codeChallenge = hash(codeVerifier);
 
   await redisClient.set(`scraper_web_state_${state}`, '1');
   await redisClient.set(`scraper_web_code_verifier_${state}`, codeVerifier);
-  await redisClient.expire(`scraper_web_state_${state}`, 60);
-  await redisClient.expire(`scraper_web_code_verifier_${state}`, 60);
+  await redisClient.expire(`scraper_web_state_${state}`, 300);
+  await redisClient.expire(`scraper_web_code_verifier_${state}`, 300);
 
   const redirectUri =
     apiUri +

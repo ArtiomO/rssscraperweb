@@ -3,6 +3,7 @@ import encodeClientCredentials from '@/helpers/encode';
 import { postData } from '@/clients/base';
 import { redisClient } from '@/db/redis';
 import { encodeForm } from '@/helpers/encode';
+import setCookieHeader from '@/session/set_session';
 
 type Data = {
   token: string;
@@ -10,6 +11,10 @@ type Data = {
 
 type Error = {
   err: string;
+};
+
+type Good = {
+  ok: string;
 };
 
 interface ExtendedNextApiRequest extends NextApiRequest {
@@ -22,7 +27,7 @@ interface ExtendedNextApiRequest extends NextApiRequest {
 
 export default async function handler(
   req: ExtendedNextApiRequest,
-  res: NextApiResponse<Data | Error>
+  res: NextApiResponse<Data | Error | Good>
 ) {
   const { code } = req.query;
 
@@ -59,11 +64,11 @@ export default async function handler(
 
   const encodedForm = encodeForm(data);
 
-  const response = await postData(
+  const response: Data = await postData(
     process.env.OAUTH_API_URL + 'v1/token',
     encodedForm,
     headers
-  ).then((data: Data) => {
-    res.status(200).json(data);
-  });
+  );
+  await setCookieHeader(res, response.token);
+  res.redirect(302, "/account");
 }
