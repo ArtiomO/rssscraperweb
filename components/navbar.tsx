@@ -1,8 +1,16 @@
 import Link from 'next/link';
 import React from 'react';
+import mono from '@/fonts/global';
 
 const styles = {
-  nav: ['flex', 'bg-white', 'border-gray-200', 'bg-gray-50'].join(' '),
+  nav: [
+    'flex',
+    'bg-white',
+    'border-gray-200',
+    'bg-gray-50',
+    'mt-4',
+    mono.className
+  ].join(' '),
   div: [
     'max-w-screen-xl',
     'flex',

@@ -3,21 +3,17 @@ import { GetServerSidePropsContext } from 'next';
 import { sessionFromRequest } from '@/session/get_session';
 import type { ReactElement } from 'react';
 import Layout from '@/components/layout';
+import UserData from '@/components/user_data';
 
 type Props = {
   isLoggedIn: boolean;
-  token?: string;
-  sessionId?: string;
+  token: string;
+  sessionId: string;
 };
 
 const Account = ({ isLoggedIn, token, sessionId }: Props) => {
   if (isLoggedIn) {
-    return (
-      <p>
-        Ok that's you.
-        <br /> Token: {token} <br /> SessionId: {sessionId}
-      </p>
-    );
+    return <UserData token={token} sessionId={sessionId}></UserData>;
   }
   return <p>Oh no !!. Unauthorized. </p>;
 };

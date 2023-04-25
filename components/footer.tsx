@@ -1,5 +1,7 @@
+import mono from '@/fonts/global';
+
 const styles = {
-  footer: ['bg-white', 'rounded-lg', 'shadow', 'm-4'].join(' '),
+  footer: ['bg-white', 'rounded-lg', 'shadow', 'm-4', mono.className].join(' '),
   div: [
     'w-full',
     'mx-auto',
@@ -23,7 +25,6 @@ const styles = {
     'text-sm',
     'font-medium',
     'text-gray-500',
-    'dark:text-gray-400',
     'sm:mt-0'
   ].join(' ')
 };
