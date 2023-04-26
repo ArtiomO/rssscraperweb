@@ -69,6 +69,12 @@ const Navbar: React.FunctionComponent = () => {
             </Link>
           </li>
           <li>
+            <Link href="/news" className={styles.link}>
+              {' '}
+              News{' '}
+            </Link>
+          </li>
+          <li>
             <Link href="/logout" className={styles.link}>
               {' '}
               Logout{' '}

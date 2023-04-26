@@ -15,7 +15,6 @@ const Account = ({ isLoggedIn, token, sessionId }: Props) => {
   if (isLoggedIn) {
     return <UserData token={token} sessionId={sessionId}></UserData>;
   }
-  return <p>Oh no !!. Unauthorized. </p>;
 };
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
