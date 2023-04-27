@@ -4,9 +4,11 @@ import { sessionFromRequest } from '@/session/get_session';
 import type { ReactElement } from 'react';
 import Layout from '@/components/layout';
 import { getData } from '@/clients/base';
+import Image from 'next/image'
 
 const styles = {
-  section: ['m-4', 'bg-gray-200/25', 'rounded-lg', 'font-small',].join(' '),
+  section: ['m-4', 'bg-gray-200/25', 'rounded-lg'].join(' '),
+
   ol: ['relative', 'border-l', 'border-gray-200'].join(
     ' '
   ),
@@ -57,13 +59,17 @@ const News = ({ news }: Props) => {
 
   for (let i = 0; i < news.length; i++) {
     const date = new Date(news[i].pub_date);
+    const linkUrl = new URL(news[i].link)
+    const favIcon = `${linkUrl.origin}/favicon.ico`
 
     listItems.push(
       <li key={news[i].id} className={styles.li}>
+        <a href={news[i].link}>
         <time className={styles.time}>{date.toLocaleDateString()}</time>
         <div className={styles.div}></div>
         <h5 className={styles.h2}>{news[i].title}</h5>
         <p className={styles.p}>{news[i].description}</p>
+        </a>
       </li>
     );
   }
