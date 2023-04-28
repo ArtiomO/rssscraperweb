@@ -5,7 +5,7 @@ import { redisClient } from '@/db/redis';
 import hash from '@/helpers/hash';
 
 const clientId = encodeURIComponent(process.env.OAUTH_CLIENT_ID);
-const apiUri = process.env.OAUTH_API_URL;
+const apiUri = process.env.FRONTCHANNEL_OAUTH_API_URL;
 const callbackUri = encodeURIComponent(process.env.OAUTH_CALLBACK_URL);
 
 export default function Login() {

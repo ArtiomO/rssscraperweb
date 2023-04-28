@@ -65,7 +65,7 @@ export default async function handler(
   const encodedForm = encodeForm(data);
 
   const response: Data = await postData(
-    process.env.OAUTH_API_URL + 'v1/token',
+    process.env.BACKCHANNEL_OAUTH_API_URL + 'v1/token',
     encodedForm,
     headers
   );

@@ -60,7 +60,6 @@ const News = ({ news }: Props) => {
   for (let i = 0; i < news.length; i++) {
     const date = new Date(news[i].pub_date);
     const linkUrl = new URL(news[i].link)
-    const favIcon = `${linkUrl.origin}/favicon.ico`
 
     listItems.push(
       <li key={news[i].id} className={styles.li}>
@@ -90,7 +89,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   };
 
   const news = await getData(
-    'http://localhost:5000/api/v1.0/item/',
+    `${process.env.SCRAPER_API_URL}v1.0/item/`,
     '',
     headers
   );
